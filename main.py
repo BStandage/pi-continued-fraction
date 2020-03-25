@@ -1,4 +1,4 @@
-from decimal import Decimal as Dec, getcontext as gc
+from decimal import Decimal as Dec
 import numpy as np
 import math
 import matplotlib.pyplot as plt
@@ -132,18 +132,25 @@ def difference(a, b):
 
 
 
+def approximate_Khinchin(coeffs):
+    product = 1
+    for c in coeffs:
+        product *= c
+
+    return product**(1/len(coeffs))
+
 
 if __name__ == '__main__':
     # select number of decimal places you wish to generate
     n = 10000
     pi = pi_chudnovsky_bs(n)
     accurate_pi = pi_chudnovsky_bs(100000)
-    print(accurate_pi)
-    print(pi)
+    print('Pi to 100,000 decimal places: ' + str(accurate_pi))
+    print('Pi to 10,000 decimal places: ' + str(pi))
 
     #print(int(str(accurate_pi)[10000:]))
     diff = '.' + '0'*10000 + str(accurate_pi)[10000:]
-    print(diff)
+    print('Difference: ' + diff)
 
     # read txt file of coefficients of pi
     f = open('pi_coefficients.txt', 'r')
@@ -169,7 +176,6 @@ if __name__ == '__main__':
     frequency_dict = results[1]
     dist = experimental_guess(coefficients)
 
-    print(coefficients)
     print('Wth a decimal length of ' + str(n) + ' there are a total of ' + str(len(coefficients)) + ' coefficients.')
     accuracy = check_accuracy(test_coeffs, coefficients)
     if accuracy == 0:
@@ -188,12 +194,15 @@ if __name__ == '__main__':
     print(expectations[:10])
     print(dist[:10])
 
-    #sns.lineplot(range(1,len(expectations)+1), expectations, color='r', label='Expectation')
-    #sns.lineplot(range(1, len(dist) + 1), dist, color='b', label='Guess')
-    #plt.legend(prop={'size': 11})
-    #plt.xlim(0,10)
-    plt.show()
 
+
+
+    sns.lineplot(range(1,len(expectations)+1), expectations, color='r', label='Expectation')
+    sns.lineplot(range(1, len(dist) + 1), dist, color='b', label='Guess')
+    plt.legend(prop={'size': 11})
+    plt.xlim(0, 10)
+    plt.show()
+    print('Approximation of Khinchin\'s constant: ' + str(approximate_Khinchin(coefficients[1:725])))
 
     ## TO DO ##
 
